@@ -1,0 +1,15 @@
+{
+  "name": "post-its",
+  "version": "1.0.0",
+  "description": "Post its system web app.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel serve ./src/index.html",
+    "build": "parcel build ./src/index.html"
+  },
+  "author": "Arno",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.8.2"
+  }
+}
