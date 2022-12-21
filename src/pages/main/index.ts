@@ -9,43 +9,45 @@ export function initMain() {
     const root = document.querySelector('.root') as HTMLElement;
     
     root.innerHTML = `
-        <h1 class="main-title">MAIN PAGE</h1>
-
+    <h1 class="main-title">MAIN PAGE</h1>
+    
         <form class="form">
             <input name="field" type="text">
             <button type="submit">Add</button>
         </form>
+        
+        <div class="tasks-list"></div>
+        `;
+        
+    const tasksListEl = root.querySelector('.tasks-list') as HTMLElement;
 
-        <div class="items-list">
-            ${state.subscribe(() => {
-                state.getState().tasks.forEach(item => `<todo-item class="todo-item" id="${item.id}" state="${item.state}" content="${item.content}"></todo-item>`);             
-            })}
-        </div>
-    `;
-
+    state.subscribe(() => {
+        tasksListEl.innerHTML = `<div> ${state.getState().tasks.map((t: any) => `<todo-item state="${t.state}" content="${t.content}"></todo-item>`).join("")} </div>`;
+    });
+        
     const form = root.querySelector('.form') as HTMLFormElement;
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        state.setState(updateState(form.field.value));
-    });
-
-    root.querySelector('.todo-item')?.addEventListener('item-created', () => {              // Escucha el custom event y actualiza el state.
-        console.log('An item has been created!', '|<-- CUSTOM EVENT LISTENER');
+        state.setState(updateState(form.field.value));        
+        form.field.value = "";
     });
 
     function updateState(itemContent: string) {
-
-        const lastState = state.getState();
-
+        const currentState = state.getState();
+        
         const newState = {
-            ...lastState,
-            tasks: [...lastState.tasks, {
-                id: lastState.tasks.id == undefined ? 0 : (lastState.tasks.id + 1),
+            ...currentState,
+            tasks: [...currentState.tasks, {
+                id: currentState.tasks.length == 0 ? 1 : (currentState.tasks.length + 1),
                 state: "init",
                 content: itemContent
             }]          
         }
-
+        
         return newState;
     }
+
+    // root.querySelector('.todo-item')?.addEventListener('item-created', () => {              // Escucha el custom event y actualiza el state.
+    //     console.log('An item has been created!', '|<-- CUSTOM EVENT LISTENER');
+    // });
 }

@@ -1,7 +1,7 @@
 enum State {
     Init = 'init',
     Checked = 'checked',
-    Focused = 'focused'
+    Deleted = 'deleted'
 }
 
 export interface Task {
