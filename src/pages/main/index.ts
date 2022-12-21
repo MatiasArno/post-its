@@ -9,7 +9,7 @@ export function initMain() {
     const root = document.querySelector('.root') as HTMLElement;
     
     root.innerHTML = `
-    <h1 class="main-title">MAIN PAGE</h1>
+        <h1 class="main-title">MAIN PAGE</h1>
     
         <form class="form">
             <input name="field" type="text">
@@ -17,7 +17,7 @@ export function initMain() {
         </form>
         
         <div class="tasks-list"></div>
-        `;
+    `;
         
     const tasksListEl = root.querySelector('.tasks-list') as HTMLElement;
 
