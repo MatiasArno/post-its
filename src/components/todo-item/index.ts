@@ -12,26 +12,28 @@ export function initTodoItem() {
         }
         
         connectedCallback(){
-            const itemCreated = new CustomEvent('item-created', {detail: "POR ACÁ LE PUEDO PASAR EL CHECKBOX PARA PODER ESCUCHARLO EN LA PAGE"});
             this.render();
-            this.dispatchEvent(itemCreated);
         }
 
         render() {
             const style = document.createElement('style');
             const div = document.createElement('div');
-            const itemState = this.getAttribute("state");
+            // const itemState = this.getAttribute("state");
             const itemContent = this.getAttribute("content");
             div.classList.add("container");
+            const itemCreated = new CustomEvent('item-created', {detail: "POR ACÁ LE PUEDO PASAR EL CHECKBOX PARA PODER ESCUCHARLO EN LA PAGE"});
 
             style.innerHTML = `
+                * {
+                    box-sizing: border-box;
+                    margin: 0;
+                }
+
                 .container {
                     display: flex;
                     height: 120px;
                     background-color: #FFF599;
                     margin: 18px 0 0 0;
-
-                    border: 3px dotted;
                 }
 
                 .left {
@@ -45,18 +47,29 @@ export function initTodoItem() {
                 .right {
                     display: flex;
                     flex-direction: column;
-                    justify-content: space-between;
-                    align-items: center;
+                    align-items: flex-end;
                     width: 10%;
                     height: 100%;
+                    padding: 15px 0 0 0;
                 }
-
-                .checkbox {
-                    width: 100%;
+                
+                input[type=checkbox] {
+                    -webkit-transform: scale(2.07);
+                    margin: 0 10px 0 0;
                 }
 
                 .button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 36px;
                     height: 36px;
+                    position: relative;
+                    top: 54px;
+                    background-color: rgba(255, 255, 255, 0);
+                    border: none;
+                    font-size: 3.6em;
+                    font-weight: bolder;
                 }
             `;
 
@@ -64,9 +77,18 @@ export function initTodoItem() {
                 <div class="left">${itemContent}</div>
                 <div class="right">
                     <input type="checkbox" class="checkbox">
-                    <button class="button">☼</button>
+                    <button class="button">×</button>
                 </div>
             `;
+
+            const checkboxEl = div.querySelector('.checkbox') as HTMLFormElement;
+            checkboxEl.addEventListener('click', () => {
+                checkboxEl.checked ? console.log('CHECKED') : console.log("NON CHECKED");
+                this.dispatchEvent(itemCreated);
+            });
+
+            const deleteBtnEl = div.querySelector('.button') as HTMLFormElement;
+            deleteBtnEl.addEventListener('click', () => this.dispatchEvent(itemCreated));
 
             this.shadow.appendChild(style);
             this.shadow.appendChild(div);

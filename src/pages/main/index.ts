@@ -22,7 +22,11 @@ export function initMain() {
     const tasksListEl = root.querySelector('.tasks-list') as HTMLElement;
 
     state.subscribe(() => {
-        tasksListEl.innerHTML = `<div> ${state.getState().tasks.map((t: any) => `<todo-item state="${t.state}" content="${t.content}"></todo-item>`).join("")} </div>`;
+        tasksListEl.innerHTML = `<div> ${state.getState().tasks.map((t: any) => `<todo-item class="todo-item" state="${t.state}" content="${t.content}"></todo-item>`).join("")} </div>`;
+
+        root.querySelector('.todo-item')?.addEventListener('item-created', () => {  
+            console.log('NEW CUSTOM EVENT');
+        });        
     });
         
     const form = root.querySelector('.form') as HTMLFormElement;
@@ -46,8 +50,4 @@ export function initMain() {
         
         return newState;
     }
-
-    // root.querySelector('.todo-item')?.addEventListener('item-created', () => {              // Escucha el custom event y actualiza el state.
-    //     console.log('An item has been created!', '|<-- CUSTOM EVENT LISTENER');
-    // });
 }
