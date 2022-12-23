@@ -13,27 +13,41 @@ const state = {
 
     listeners: [],
 
-    getState() {
+    getState(){
         return this.data;
     },
 
-    setState(newState: Object) {
+    setState(newState: Object){
         console.log("Recibí datos ==> ", newState);
         this.data = newState;
 
-        for(const cb of this.listeners) {                   // Recorre las funciones de listeners y las ejecuta.
+        for(const cb of this.listeners) {                                                                   // Recorre las funciones de listeners y las ejecuta.
             cb();                           
         }
+
+        this.saveState();
+    },
+
+    updateTaskStatus(task: HTMLElement, taskStatus: string) {
+        const currentState = this.getState();
+        const taskFound = currentState.tasks.find((t: HTMLElement) => t.id == task.getAttribute("id"));     // Encuentra la tarea del state correspondiente a la tarea renderizada.
+        taskFound.state = taskStatus;
+
+        this.saveState();
     },
 
     saveState(){
-        console.log('State saved... (TEST)');
+        const currentStateTasks = this.getState().tasks;
+        currentStateTasks.forEach((t: any) => window.localStorage.setItem(`${t.id}`, `{id: "${t.id}", state: "${t.state}", content: "${t.content}"}`));
     },
 
-    subscribe(callback: (any: any) => any) {                // SUBSCRIPCION AL STATE PARA ACTUALIZAR LOS COMPONENTES ASOCIADOS.
-                                                            // Recibe una función llamada "callback" por convención.
-        this.listeners.push(callback);                      // Genero un array de funciones.
-        console.log(`NEW CALLBACK -->| ${callback} |<---`);
+    getSavedState(){
+        
+        return window.localStorage;
+    },
+
+    subscribe(callback: (any: any) => any){                                                                // ACTUALIZA LOS COMPONENTES ASOCIADOS.Recibe una función llamada "callback" por convención.
+        this.listeners.push(callback);                                                                      // Genero un array de funciones.
     }
 };
 

@@ -21,24 +21,37 @@ export function initMain() {
         
     const tasksListEl = root.querySelector('.tasks-list') as HTMLElement;
 
-    state.subscribe(() => {
-        tasksListEl.innerHTML = `<div> ${state.getState().tasks.map((t: any) => `<todo-item class="todo-item" state="${t.state}" content="${t.content}"></todo-item>`).join("")} </div>`;
-
-        root.querySelector('.todo-item')?.addEventListener('item-created', () => {  
-            console.log('NEW CUSTOM EVENT');
-        });        
-    });
+    state.subscribe(() => renderTasksList());
         
     const form = root.querySelector('.form') as HTMLFormElement;
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         state.setState(updateState(form.field.value));        
         form.field.value = "";
+
+        const tasksArray = root.querySelectorAll('.todo-item');
+        
+        tasksArray.forEach((i) => {
+            i.addEventListener("item-deleted", () => {
+                console.log("ITEM DELETED EVENT");
+                console.log(state.getSavedState());
+            });
+
+            i.addEventListener("item-checked", (e) => {
+                const task = e.target as HTMLElement;
+                const taskStatus = e.detail;
+                taskStatus == true ? state.updateTaskStatus(task, "checked") : state.updateTaskStatus(task, "init");
+                console.log(task, "ITEM CHECKED");
+            });
+        });
     });
 
+    function renderTasksList() {
+        tasksListEl.innerHTML = `<div> ${state.getState().tasks.map((t: any) => `<todo-item class="todo-item" state="${t.state}" content="${t.content}" id="${t.id}"></todo-item>`).join("")} </div>`;
+    }    
+
     function updateState(itemContent: string) {
-        const currentState = state.getState();
-        
+        const currentState = state.getState();        
         const newState = {
             ...currentState,
             tasks: [...currentState.tasks, {
@@ -46,8 +59,7 @@ export function initMain() {
                 state: "init",
                 content: itemContent
             }]          
-        }
-        
+        }        
         return newState;
     }
 }

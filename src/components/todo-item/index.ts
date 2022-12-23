@@ -18,10 +18,9 @@ export function initTodoItem() {
         render() {
             const style = document.createElement('style');
             const div = document.createElement('div');
-            // const itemState = this.getAttribute("state");
+            const itemState = this.getAttribute("state");
             const itemContent = this.getAttribute("content");
             div.classList.add("container");
-            const itemCreated = new CustomEvent('item-created', {detail: "POR ACÁ LE PUEDO PASAR EL CHECKBOX PARA PODER ESCUCHARLO EN LA PAGE"});
 
             style.innerHTML = `
                 * {
@@ -38,10 +37,11 @@ export function initTodoItem() {
 
                 .left {
                     display: flex;
-                    justify-content: center;
                     align-items: center;
                     width: 90%;
                     height: 100%;
+                    padding: 0 18px;
+                    text-align: justify;
                 }
                 
                 .right {
@@ -52,6 +52,10 @@ export function initTodoItem() {
                     height: 100%;
                     padding: 15px 0 0 0;
                 }
+
+                    .task-completed {
+                        text-decoration: line-through;
+                    }
                 
                 input[type=checkbox] {
                     -webkit-transform: scale(2.07);
@@ -74,21 +78,24 @@ export function initTodoItem() {
             `;
 
             div.innerHTML = `
-                <div class="left">${itemContent}</div>
+                <div class="left ${itemState == "checked" ? "task-completed" : ""}">${itemContent}</div>
                 <div class="right">
                     <input type="checkbox" class="checkbox">
                     <button class="button">×</button>
                 </div>
-            `;
+                `;
+
 
             const checkboxEl = div.querySelector('.checkbox') as HTMLFormElement;
             checkboxEl.addEventListener('click', () => {
-                checkboxEl.checked ? console.log('CHECKED') : console.log("NON CHECKED");
-                this.dispatchEvent(itemCreated);
-            });
+                let itemChecked: any;
+                checkboxEl.checked ? itemChecked = new CustomEvent('item-checked', {detail: true}) : itemChecked = new CustomEvent('item-checked', {detail: false});                
+                this.dispatchEvent(itemChecked);
+            });            
 
             const deleteBtnEl = div.querySelector('.button') as HTMLFormElement;
-            deleteBtnEl.addEventListener('click', () => this.dispatchEvent(itemCreated));
+            deleteBtnEl.addEventListener('click', () => this.dispatchEvent(itemDeleted));          
+            const itemDeleted = new CustomEvent('item-deleted');
 
             this.shadow.appendChild(style);
             this.shadow.appendChild(div);
