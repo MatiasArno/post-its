@@ -20,34 +20,38 @@ const state = {
     setState(newState: Object){
         console.log("Recibí datos ==> ", newState);
         this.data = newState;
+        this.saveState();
 
         for(const cb of this.listeners) {                                                                   // Recorre las funciones de listeners y las ejecuta.
             cb();                           
         }
-
-        this.saveState();
     },
 
     updateTaskStatus(task: HTMLElement, taskStatus: string) {
         const currentState = this.getState();
         const taskFound = currentState.tasks.find((t: HTMLElement) => t.id == task.getAttribute("id"));     // Encuentra la tarea del state correspondiente a la tarea renderizada.
         taskFound.state = taskStatus;
-
         this.saveState();
     },
 
     saveState(){
         const currentStateTasks = this.getState().tasks;
-        currentStateTasks.forEach((t: any) => window.localStorage.setItem(`${t.id}`, `{id: "${t.id}", state: "${t.state}", content: "${t.content}"}`));
+        currentStateTasks.forEach((t: any) => window.localStorage.setItem(`${t.id}`, `{"id": "${t.id}", "state": "${t.state}", "content": "${t.content}"}`));
     },
 
-    getSavedState(){
+    getStoredTasks() {
+        const storedTasks = window.localStorage as any;
+        const tasksObj = [] as {}[];
         
-        return window.localStorage;
+        for(let i = 1; i <= storedTasks.length; i++){
+            tasksObj.push(JSON.parse(storedTasks[i]));
+        }
+
+        return tasksObj;
     },
 
     subscribe(callback: (any: any) => any){                                                                // ACTUALIZA LOS COMPONENTES ASOCIADOS.Recibe una función llamada "callback" por convención.
-        this.listeners.push(callback);                                                                      // Genero un array de funciones.
+        this.listeners.push(callback);                                                                     // Genero un array de funciones.
     }
 };
 

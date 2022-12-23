@@ -31,23 +31,27 @@ export function initMain() {
 
         const tasksArray = root.querySelectorAll('.todo-item');
         
-        tasksArray.forEach((i) => {
-            i.addEventListener("item-deleted", () => {
-                console.log("ITEM DELETED EVENT");
-                console.log(state.getSavedState());
+        tasksArray.forEach((task, i) => {
+            task.addEventListener("item-deleted", () => {
+                const storedTasks = state.getStoredTasks() as Object;
+                console.log(`STATE TASK ${storedTasks[i].id} | RENDERED TASK ${task} | ITEM DELETED CUSTOM EVENT`);
+
+                console.log(storedTasks);
             });
 
-            i.addEventListener("item-checked", (e) => {
+            task.addEventListener("item-checked", (e: any) => {
                 const task = e.target as HTMLElement;
                 const taskStatus = e.detail;
-                taskStatus == true ? state.updateTaskStatus(task, "checked") : state.updateTaskStatus(task, "init");
-                console.log(task, "ITEM CHECKED");
+                taskStatus == true ? state.updateTaskStatus(task, "checked") : state.updateTaskStatus(task, "init");        // DESDE EL STATE SE GUARDA EN LOCAL STORAGE.
+                console.log(task, `${taskStatus == true ? "CHECKED" : "UNCHECKED"}`);
             });
         });
     });
 
     function renderTasksList() {
-        tasksListEl.innerHTML = `<div> ${state.getState().tasks.map((t: any) => `<todo-item class="todo-item" state="${t.state}" content="${t.content}" id="${t.id}"></todo-item>`).join("")} </div>`;
+        const storedTasks = state.getStoredTasks() as Object[];
+
+        tasksListEl.innerHTML = `<div> ${storedTasks.map((t: any) => `<todo-item class="todo-item" state="${t.state}" content="${t.content}" id="${t.id}"></todo-item>`).join("")} </div>`;
     }    
 
     function updateState(itemContent: string) {
@@ -55,7 +59,7 @@ export function initMain() {
         const newState = {
             ...currentState,
             tasks: [...currentState.tasks, {
-                id: currentState.tasks.length == 0 ? 1 : (currentState.tasks.length + 1),
+                id: currentState.tasks.length < 1 ? 1 : (currentState.tasks.length + 1),
                 state: "init",
                 content: itemContent
             }]          
