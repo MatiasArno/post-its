@@ -1,6 +1,8 @@
 // Recibe atributos para mostrar la card amarilla correspondiente a cada pendiente con la data que corresponda.
 // Emite un evento (custom-event) para que la page se entere de que algo cambió.
 
+import { state } from "../../state";
+
 export function initTodoItem() {
 
     class TodoItem extends HTMLElement {
@@ -9,6 +11,7 @@ export function initTodoItem() {
 
         constructor() {
             super();
+            // state.subscribe(() => {this.render()});
         }
         
         connectedCallback(){
@@ -80,7 +83,7 @@ export function initTodoItem() {
             div.innerHTML = `
                 <div class="left ${itemState == "checked" ? "task-completed" : ""}">${itemContent}</div>
                 <div class="right">
-                    <input type="checkbox" class="checkbox">
+                    <input type="checkbox" class="checkbox" ${itemState == "checked" ? "checked" : ""}>
                     <button class="button">×</button>
                 </div>
                 `;

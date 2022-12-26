@@ -18,7 +18,7 @@ const state = {
     },
 
     setState(newState: Object){
-        console.log("Recibí datos ==> ", newState);
+        console.log("SOY EL STATE, RECIBÍ ==> ", newState);
         this.data = newState;
         this.saveState();
 
@@ -28,14 +28,17 @@ const state = {
     },
 
     updateTaskStatus(task: HTMLElement, taskStatus: string) {
-        const currentState = this.getState();
-        const taskFound = currentState.tasks.find((t: HTMLElement) => t.id == task.getAttribute("id"));     // Encuentra la tarea del state correspondiente a la tarea renderizada.
+        const currentStateTasks = this.getStoredTasks();
+        const taskFound = currentStateTasks.find((t: HTMLElement) => t.id == task.getAttribute("id"));     // Encuentra la tarea del state correspondiente a la tarea renderizada.
         taskFound.state = taskStatus;
         this.saveState();
+        
+        console.log(currentStateTasks, "STORED TASKS");
+        console.log(taskFound, "TASK FOUND");
     },
 
     saveState(){
-        const currentStateTasks = this.getState().tasks;
+        const currentStateTasks = this.data.tasks;
         currentStateTasks.forEach((t: any) => window.localStorage.setItem(`${t.id}`, `{"id": "${t.id}", "state": "${t.state}", "content": "${t.content}"}`));
     },
 

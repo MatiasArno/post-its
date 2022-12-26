@@ -18,7 +18,7 @@ export function initMain() {
         
         <div class="tasks-list"></div>
     `;
-        
+
     const tasksListEl = root.querySelector('.tasks-list') as HTMLElement;
 
     state.subscribe(() => renderTasksList());
@@ -27,34 +27,32 @@ export function initMain() {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         state.setState(updateState(form.field.value));        
-        form.field.value = "";
+        form.field.value = "";     
+    });
+
+    function renderTasksList() {
+        const storedTasks = state.getStoredTasks() as Object[];
+        tasksListEl.innerHTML = `<div> ${storedTasks.map((t: any) => `<todo-item class="todo-item" state="${t.state}" content="${t.content}" id="${t.id}"></todo-item>`).join("")} </div>`;
 
         const tasksArray = root.querySelectorAll('.todo-item');
-        
+
         tasksArray.forEach((task, i) => {
             task.addEventListener("item-deleted", () => {
-                const storedTasks = state.getStoredTasks() as Object;
-                console.log(`STATE TASK ${storedTasks[i].id} | RENDERED TASK ${task} | ITEM DELETED CUSTOM EVENT`);
-
-                console.log(storedTasks);
+                const storedTasks = state.getStoredTasks() as Object;                
+                console.log(task, "CUSTOM EVENT 'item-deleted'");
             });
 
             task.addEventListener("item-checked", (e: any) => {
                 const task = e.target as HTMLElement;
                 const taskStatus = e.detail;
                 taskStatus == true ? state.updateTaskStatus(task, "checked") : state.updateTaskStatus(task, "init");        // DESDE EL STATE SE GUARDA EN LOCAL STORAGE.
-                console.log(task, `${taskStatus == true ? "CHECKED" : "UNCHECKED"}`);
+                console.log(task, `${taskStatus == true ? "CHECKED" : "UNCHECKED"}`);  
+                state.setState(testUpdateState(task, taskStatus));
             });
         });
-    });
-
-    function renderTasksList() {
-        const storedTasks = state.getStoredTasks() as Object[];
-
-        tasksListEl.innerHTML = `<div> ${storedTasks.map((t: any) => `<todo-item class="todo-item" state="${t.state}" content="${t.content}" id="${t.id}"></todo-item>`).join("")} </div>`;
     }    
 
-    function updateState(itemContent: string) {
+    function updateState(itemContent: String | Boolean) {
         const currentState = state.getState();        
         const newState = {
             ...currentState,
@@ -63,7 +61,22 @@ export function initMain() {
                 state: "init",
                 content: itemContent
             }]          
-        }        
+        }
         return newState;
     }
+
+    function testUpdateState(task: HTMLElement, taskStatus: Boolean) {
+        const updatedState = state.getStoredTasks(); 
+
+        console.log(updatedState, "UPDATED STATE");
+        
+        const taskFound = updatedState.find((t: any) => t.id == task.getAttribute("id"));     
+        
+        console.log(taskFound, "TASK FOUND");
+
+        taskFound.state = `${taskStatus == true ? "checked" : "init"}`; 
+        return updatedState;
+    }
+
+    window.onload = () => renderTasksList();
 }
