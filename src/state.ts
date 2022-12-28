@@ -13,6 +13,11 @@ const state = {
 
     listeners: [],
 
+    init(){
+        const storedState = localStorage.getItem('state') as string;
+        storedState == null ? console.log("No stored data to render...") : this.setState(JSON.parse(storedState));
+    },
+
     getState(){
         return this.data;
     },
@@ -20,37 +25,19 @@ const state = {
     setState(newState: Object){
         console.log("SOY EL STATE, RECIBÍ ==> ", newState);
         this.data = newState;
-        this.saveState();
 
         for(const cb of this.listeners) {                                                                   // Recorre las funciones de listeners y las ejecuta.
             cb();                           
         }
+        
+        localStorage.setItem('state', JSON.stringify(newState));
     },
 
     updateTaskStatus(task: HTMLElement, taskStatus: string) {
-        const currentStateTasks = this.getStoredTasks();
-        const taskFound = currentStateTasks.find((t: HTMLElement) => t.id == task.getAttribute("id"));     // Encuentra la tarea del state correspondiente a la tarea renderizada.
+        const currentState = this.getState();
+        const taskFound = currentState.tasks.find((t: HTMLElement) => t.id == task.getAttribute("id"));     // Encuentra la tarea del state correspondiente a la tarea renderizada.
         taskFound.state = taskStatus;
-        this.saveState();
-        
-        console.log(currentStateTasks, "STORED TASKS");
-        console.log(taskFound, "TASK FOUND");
-    },
-
-    saveState(){
-        const currentStateTasks = this.data.tasks;
-        currentStateTasks.forEach((t: any) => window.localStorage.setItem(`${t.id}`, `{"id": "${t.id}", "state": "${t.state}", "content": "${t.content}"}`));
-    },
-
-    getStoredTasks() {
-        const storedTasks = window.localStorage as any;
-        const tasksObj = [] as {}[];
-        
-        for(let i = 1; i <= storedTasks.length; i++){
-            tasksObj.push(JSON.parse(storedTasks[i]));
-        }
-
-        return tasksObj;
+        this.setState(currentState);
     },
 
     subscribe(callback: (any: any) => any){                                                                // ACTUALIZA LOS COMPONENTES ASOCIADOS.Recibe una función llamada "callback" por convención.

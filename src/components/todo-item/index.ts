@@ -11,7 +11,6 @@ export function initTodoItem() {
 
         constructor() {
             super();
-            // state.subscribe(() => {this.render()});
         }
         
         connectedCallback(){
@@ -21,9 +20,9 @@ export function initTodoItem() {
         render() {
             const style = document.createElement('style');
             const div = document.createElement('div');
-            const itemState = this.getAttribute("state");
-            const itemContent = this.getAttribute("content");
-            div.classList.add("container");
+            const itemState = this.getAttribute('state');
+            const itemContent = this.getAttribute('content');
+            div.classList.add('container');
 
             style.innerHTML = `
                 * {
@@ -86,8 +85,7 @@ export function initTodoItem() {
                     <input type="checkbox" class="checkbox" ${itemState == "checked" ? "checked" : ""}>
                     <button class="button">×</button>
                 </div>
-                `;
-
+            `;
 
             const checkboxEl = div.querySelector('.checkbox') as HTMLFormElement;
             checkboxEl.addEventListener('click', () => {
