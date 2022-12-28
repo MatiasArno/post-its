@@ -9,11 +9,11 @@ export function initMain() {
     const root = document.querySelector('.root') as HTMLElement;
     
     root.innerHTML = `
-        <h1 class="main-title">MAIN PAGE</h1>
+        <h1 class="main-title">PENDIENTES</h1>
     
         <form class="form">
-            <input name="field" type="text">
-            <button type="submit">Add</button>
+            <input name="field" type="text" class="input-field">
+            <button type="submit" class="submit-btn">Add</button>
         </form>
         
         <div class="tasks-list"></div>
@@ -31,8 +31,6 @@ export function initMain() {
     });
 
     function renderTasksList() {
-        console.log("RENDER EXECUTED");
-
         const stateTasks = state.getState().tasks as Object[];
         tasksListEl.innerHTML = `<div> ${stateTasks.map((t: any) => `<todo-item class="todo-item" state="${t.state}" content="${t.content}" id="${t.id}"></todo-item>`).join("")} </div>`;
 
@@ -40,7 +38,7 @@ export function initMain() {
         tasksArray.forEach((task, i) => {
             task.addEventListener("item-deleted", () => {
                 const stateTasks = state.getState() as Object[];
-                console.log(task, "CUSTOM EVENT 'item-deleted'");
+                console.log(task.getAttribute('id'), "CUSTOM EVENT");
             });
             task.addEventListener("item-checked", (e: any) => {
                 const task = e.target as HTMLElement;

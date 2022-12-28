@@ -1,8 +1,40 @@
 .main-title {
-  background-color: steelblue;
+  margin: 0;
+  height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: tomato;
   color: white;
+  font-size: 3em;
 }
 
-.items-list {
-  background-color: wheat;
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 210px;
 }
+
+  .input-field {
+    width: 306px;
+    height: 45px;
+  }
+
+  .submit-btn {
+    margin: 9px 0 0 0;
+    width: 306px;
+    height: 45px;
+    border: none;
+    background-color: steelblue;
+    color: white;
+    font-size: 1.5em;
+    font-weight: 500;
+    border-radius: 3px;
+  }
+
+  .tasks-list {
+    display: flex;
+    justify-content: center;
+  }

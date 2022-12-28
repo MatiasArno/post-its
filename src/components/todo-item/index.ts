@@ -32,25 +32,26 @@ export function initTodoItem() {
 
                 .container {
                     display: flex;
+                    width: 360px;
                     height: 120px;
                     background-color: #FFF599;
                     margin: 18px 0 0 0;
+                    border-radius: 4.5px;
                 }
 
                 .left {
                     display: flex;
-                    align-items: center;
-                    width: 90%;
+                    width: 85%;
                     height: 100%;
-                    padding: 0 18px;
+                    padding: 4.5px;
                     text-align: justify;
                 }
                 
                 .right {
                     display: flex;
                     flex-direction: column;
-                    align-items: flex-end;
-                    width: 10%;
+                    align-items: center;
+                    width: 15%;
                     height: 100%;
                     padding: 15px 0 0 0;
                 }
@@ -61,7 +62,6 @@ export function initTodoItem() {
                 
                 input[type=checkbox] {
                     -webkit-transform: scale(2.07);
-                    margin: 0 10px 0 0;
                 }
 
                 .button {

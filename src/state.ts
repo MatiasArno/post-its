@@ -23,13 +23,11 @@ const state = {
     },
 
     setState(newState: Object){
-        console.log("SOY EL STATE, RECIBÍ ==> ", newState);
         this.data = newState;
-
         for(const cb of this.listeners) {                                                                   // Recorre las funciones de listeners y las ejecuta.
             cb();                           
         }
-        
+
         localStorage.setItem('state', JSON.stringify(newState));
     },
 
